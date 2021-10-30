@@ -23,54 +23,54 @@ async function run() {
         const database = client.db("pintrip");
         const tripsCollection = database.collection("trips");
 
-        // GET API for find multiple data.
+        // GET API to find multiple data.
         app.get("/trips", async(req, res) => {
             const cursor = tripsCollection.find({});
-            const services = await cursor.toArray();
-            res.send(services);
+            const trips = await cursor.toArray();
+            res.send(trips);
         });
         
-        // GET API for find single data.
+        // GET API to find single data.
         app.get("/trips/:tripId", async(req, res) => {
-            const id = req.params.id;
+            const id = req.params.tripId;
             const query = { _id: ObjectId(id) };
-            const oneService = await servicesCollection.findOne(query);
-            res.send(oneService);
+            const singleTrip = await tripsCollection.findOne(query);
+            res.send(singleTrip);
         });
 
-        // POST API for create single data
-        app.post("/service", async(req, res) => {
-            const service = req.body;
-            const singleService = await servicesCollection.insertOne(service);
-            res.json(singleService);
+        // POST API to create single data
+        app.post("/trips", async(req, res) => {
+            const trip = req.body;
+            const singleTrip = await tripsCollection.insertOne(trip);
+            res.json(singleTrip);
         });
 
-        app.put("/update/:id", async(req, res) => {
-            const id = req.params.id;
-            const updateService = req.body;
+        // PUT API to update single data
+        app.put("/update/:tripId", async(req, res) => {
+            const id = req.params.tripId;
+            const updateTrip = req.body;
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
             const updateDoc = {
                 $set: {
-                    name: updateService.name,
-                    price: updateService.price
+                    title: updateTrip.title,
+                    cost: updateTrip.cost
                 }
             }
-            const updatedService = await servicesCollection.updateOne(filter, updateDoc, options);
-            res.json(updatedService);
+            const updatedTrip = await tripsCollection.updateOne(filter, updateDoc, options);
+            res.json(updatedTrip);
 
         });
 
         // delete api
-        app.delete("/service/:id", async(req, res) => {
-            const id = req.params.id;
+        app.delete("/trips/:tripId", async(req, res) => {
+            const id = req.params.tripId;
             const query = { _id: ObjectId(id) };
-            const deleteService = await servicesCollection.deleteOne(query);
-            res.send(deleteService)
+            const deleteTrip = await tripsCollection.deleteOne(query);
+            res.send(deleteTrip)
         })
     }
     finally{
-        // client.close();
     }
 }
 
@@ -79,6 +79,6 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', (req, res) => res.send('pintrip server is working... Yay!!'));
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
