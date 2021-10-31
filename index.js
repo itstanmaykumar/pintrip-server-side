@@ -22,12 +22,18 @@ async function run() {
         await client.connect();
         const database = client.db("pintrip");
         const tripsCollection = database.collection("trips");
+        const bookedTripCollection = database.collection("bookedTrip");
 
         // GET API to find multiple data.
         app.get("/trips", async(req, res) => {
             const cursor = tripsCollection.find({});
             const trips = await cursor.toArray();
             res.send(trips);
+        });
+        app.get("/bookedTrip", async(req, res) => {
+            const cursor = bookedTripCollection.find({});
+            const tripsCart = await cursor.toArray();
+            res.send(tripsCart);
         });
         
         // GET API to find single data.
@@ -37,12 +43,19 @@ async function run() {
             const singleTrip = await tripsCollection.findOne(query);
             res.send(singleTrip);
         });
+        
 
         // POST API to create single data
         app.post("/trips", async(req, res) => {
             const trip = req.body;
             const singleTrip = await tripsCollection.insertOne(trip);
             res.json(singleTrip);
+        });
+
+        app.post("/bookedTrip", async(req, res) => {
+            const tripsCart = req.body;
+            const tripCart = await bookedTripCollection.insertOne(tripsCart);
+            res.json(tripCart);
         });
 
         // PUT API to update single data
