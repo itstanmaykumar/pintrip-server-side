@@ -43,6 +43,12 @@ async function run() {
             const singleTrip = await tripsCollection.findOne(query);
             res.send(singleTrip);
         });
+        app.get("/bookedTrip/:bookingId", async(req, res) => {
+            const id = req.params.bookingId;
+            const query = { _id: ObjectId(id) };
+            const singleBooking = await bookedTripCollection.findOne(query);
+            res.send(singleBooking)
+        })
         
 
         // POST API to create single data
@@ -81,6 +87,12 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const deleteTrip = await tripsCollection.deleteOne(query);
             res.send(deleteTrip)
+        })
+        app.delete("/bookedTrip/:bookingId", async(req, res) => {
+            const id = req.params.bookingId;
+            const query = { _id: ObjectId(id) };
+            const deleteBooking = await bookedTripCollection.deleteOne(query);
+            res.send(deleteBooking)
         })
     }
     finally{
