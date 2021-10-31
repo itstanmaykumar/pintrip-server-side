@@ -23,12 +23,12 @@ async function run() {
         const tripsCollection = database.collection("trips");
         const bookedTripCollection = database.collection("bookedTrip");
 
+        // getting APIs from database
         app.get("/trips", async(req, res) => {
             const cursor = tripsCollection.find({});
             const trips = await cursor.toArray();
             res.send(trips);
         });
-
         app.get("/bookedTrip", async(req, res) => {
             let query = {};
             const email = req.query.email;
@@ -40,6 +40,7 @@ async function run() {
             res.send(tripsCart);
         });
         
+        // getting single item from database
         app.get("/trips/:tripId", async(req, res) => {
             const id = req.params.tripId;
             const query = { _id: ObjectId(id) };
@@ -53,36 +54,19 @@ async function run() {
             res.send(singleBooking)
         })
         
-
+        // adding item to database
         app.post("/trips", async(req, res) => {
             const trip = req.body;
             const singleTrip = await tripsCollection.insertOne(trip);
             res.json(singleTrip);
         });
-
         app.post("/bookedTrip", async(req, res) => {
             const tripsCart = req.body;
             const tripCart = await bookedTripCollection.insertOne(tripsCart);
             res.json(tripCart);
         });
-
-        app.put("/update/:tripId", async(req, res) => {
-            const id = req.params.tripId;
-            const updateTrip = req.body;
-            const filter = { _id: ObjectId(id) };
-            const options = { upsert: true };
-            const updateDoc = {
-                $set: {
-                    title: updateTrip.title,
-                    cost: updateTrip.cost
-                }
-            }
-            const updatedTrip = await tripsCollection.updateOne(filter, updateDoc, options);
-            res.json(updatedTrip);
-
-        });
         
-        // UPDATE Booking Status
+        // updating booking status
         app.put("/bookedTrip/:bookingId", async(req, res) => {
             const id = req.params.bookingId;
             const updatedStatus = true;
@@ -97,12 +81,7 @@ async function run() {
             res.send(updateStatus);
         })
 
-        app.delete("/trips/:tripId", async(req, res) => {
-            const id = req.params.tripId;
-            const query = { _id: ObjectId(id) };
-            const deleteTrip = await tripsCollection.deleteOne(query);
-            res.send(deleteTrip)
-        })
+        // deleting single item from database
         app.delete("/bookedTrip/:bookingId", async(req, res) => {
             const id = req.params.bookingId;
             const query = { _id: ObjectId(id) };
