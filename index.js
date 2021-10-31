@@ -28,8 +28,14 @@ async function run() {
             const trips = await cursor.toArray();
             res.send(trips);
         });
+
         app.get("/bookedTrip", async(req, res) => {
-            const cursor = bookedTripCollection.find({});
+            let query = {};
+            const email = req.query.email;
+            if(email) {
+                query = { email: email };
+            }
+            const cursor = bookedTripCollection.find(query);
             const tripsCart = await cursor.toArray();
             res.send(tripsCart);
         });
