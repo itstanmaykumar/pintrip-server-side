@@ -81,6 +81,21 @@ async function run() {
             res.json(updatedTrip);
 
         });
+        
+        // UPDATE Booking Status
+        app.put("/bookedTrip/:bookingId", async(req, res) => {
+            const id = req.params.bookingId;
+            const updatedStatus = req.body;
+            const query = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: true
+                },
+            };
+            const updateStatus = await bookedTripCollection.updateOne(query, updateDoc, options)
+            res.send(updateStatus);
+        })
 
         app.delete("/trips/:tripId", async(req, res) => {
             const id = req.params.tripId;
