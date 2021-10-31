@@ -8,7 +8,6 @@ const ObjectId = require("mongodb").ObjectId;
 const app = express();
 const port = process.env.PORT || 5000;
 
-// middleware
 app.use(cors());
 app.use(express.json());
 
@@ -24,7 +23,6 @@ async function run() {
         const tripsCollection = database.collection("trips");
         const bookedTripCollection = database.collection("bookedTrip");
 
-        // GET API to find multiple data.
         app.get("/trips", async(req, res) => {
             const cursor = tripsCollection.find({});
             const trips = await cursor.toArray();
@@ -36,7 +34,6 @@ async function run() {
             res.send(tripsCart);
         });
         
-        // GET API to find single data.
         app.get("/trips/:tripId", async(req, res) => {
             const id = req.params.tripId;
             const query = { _id: ObjectId(id) };
@@ -51,7 +48,6 @@ async function run() {
         })
         
 
-        // POST API to create single data
         app.post("/trips", async(req, res) => {
             const trip = req.body;
             const singleTrip = await tripsCollection.insertOne(trip);
@@ -64,7 +60,6 @@ async function run() {
             res.json(tripCart);
         });
 
-        // PUT API to update single data
         app.put("/update/:tripId", async(req, res) => {
             const id = req.params.tripId;
             const updateTrip = req.body;
@@ -81,7 +76,6 @@ async function run() {
 
         });
 
-        // delete api
         app.delete("/trips/:tripId", async(req, res) => {
             const id = req.params.tripId;
             const query = { _id: ObjectId(id) };
