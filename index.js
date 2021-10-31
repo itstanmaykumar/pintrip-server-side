@@ -85,12 +85,12 @@ async function run() {
         // UPDATE Booking Status
         app.put("/bookedTrip/:bookingId", async(req, res) => {
             const id = req.params.bookingId;
-            const updatedStatus = req.body;
+            const updatedStatus = true;
             const query = { _id: ObjectId(id) };
             const options = { upsert: true };
             const updateDoc = {
                 $set: {
-                    status: true
+                    status: updatedStatus
                 },
             };
             const updateStatus = await bookedTripCollection.updateOne(query, updateDoc, options)
