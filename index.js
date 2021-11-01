@@ -22,18 +22,12 @@ async function run() {
         const database = client.db("pintrip");
         const tripsCollection = database.collection("trips");
         const bookedTripCollection = database.collection("bookedTrip");
-        const testimonialCollection = database.collection("testimonial");
 
         // getting APIs from database
         app.get("/trips", async(req, res) => {
             const cursor = tripsCollection.find({});
             const trips = await cursor.toArray();
             res.send(trips);
-        });
-        app.get("/testimonial", async(req, res) => {
-            const cursor = testimonialCollection.find({});
-            const testi = await cursor.toArray();
-            res.send(testi);
         });
         
         // filtering items by current user email
